@@ -55,8 +55,8 @@ const TitleForm = ({ initialData, courseId }: Props) => {
       toggleEdit();
       router.refresh();
       toast({
-        variant: "success",
-        title: "Course Updated!",
+        variant: "default",
+        title: "Title Updated!",
       });
     } catch (error) {
       toast({

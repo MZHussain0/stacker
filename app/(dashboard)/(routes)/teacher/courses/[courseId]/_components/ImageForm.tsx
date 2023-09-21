@@ -35,8 +35,8 @@ const ImageForm = ({ initialData, courseId }: Props) => {
       toggleEdit();
       router.refresh();
       toast({
-        variant: "success",
-        title: "Course Updated!",
+        variant: "default",
+        title: "Image Updated!",
       });
     } catch (error) {
       toast({

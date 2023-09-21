@@ -19,19 +19,19 @@ import { PencilIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@prisma/client";
+import { Combobox } from "@/components/ui/combobox";
 
 type Props = {
   initialData: Course;
   courseId: string;
+  options: { label: string; value: string }[];
 };
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
+  categoryId: z.string().min(1),
 });
 
-const DescriptionForm = ({ initialData, courseId }: Props) => {
+const CategoryForm = ({ initialData, courseId, options }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +42,7 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
     // @ts-ignore
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      categoryId: initialData?.categoryId || "",
     },
   });
 
@@ -55,7 +55,7 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
       router.refresh();
       toast({
         variant: "default",
-        title: "Description Updated!",
+        title: "Category Updated!",
       });
     } catch (error) {
       toast({
@@ -65,16 +65,20 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
     }
   };
 
+  const selectedOption = options.find(
+    (option) => option.value === initialData.categoryId
+  );
+
   return (
     <div className="mt-6 border bg-muted rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Course Category
         <Button onClick={toggleEdit} variant={"ghost"}>
           {isEditing && <>Cancel</>}
           {!isEditing && (
             <>
               <PencilIcon className="h-4 w-4 mr-2 text-brand" />
-              Edit description
+              Edit category
             </>
           )}
         </Button>
@@ -84,9 +88,9 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-muted-foreground italic"
+            !initialData.categoryId && "text-muted-foreground italic"
           )}>
-          {initialData.description || "No description"}
+          {selectedOption?.label || "No category"}
         </p>
       )}
 
@@ -97,15 +101,11 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
             className="space-y-4 mt-4">
             <FormField
               control={form.control}
-              name="description"
+              name="categoryId"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      disabled={isSubmitting}
-                      placeholder=" eg: 'It teaches you to master the web development'"
-                      {...field}
-                    />
+                    <Combobox options={...options} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -127,4 +127,4 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
   );
 };
 
-export default DescriptionForm;
+export default CategoryForm;

@@ -19,6 +19,8 @@ import { PencilIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import { formatPrice } from "@/lib/format";
 
 type Props = {
   initialData: Course;
@@ -26,12 +28,10 @@ type Props = {
 };
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
+  price: z.coerce.number(),
 });
 
-const DescriptionForm = ({ initialData, courseId }: Props) => {
+const PriceForm = ({ initialData, courseId }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +42,7 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
     // @ts-ignore
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      price: initialData?.price || undefined,
     },
   });
 
@@ -55,7 +55,7 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
       router.refresh();
       toast({
         variant: "default",
-        title: "Description Updated!",
+        title: "Price Updated!",
       });
     } catch (error) {
       toast({
@@ -68,13 +68,13 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
   return (
     <div className="mt-6 border bg-muted rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Course Price
         <Button onClick={toggleEdit} variant={"ghost"}>
           {isEditing && <>Cancel</>}
           {!isEditing && (
             <>
               <PencilIcon className="h-4 w-4 mr-2 text-brand" />
-              Edit description
+              Edit price
             </>
           )}
         </Button>
@@ -84,9 +84,9 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-muted-foreground italic"
+            !initialData.price && "text-muted-foreground italic"
           )}>
-          {initialData.description || "No description"}
+          {initialData.price ? formatPrice(initialData.price) : "No price"}
         </p>
       )}
 
@@ -97,13 +97,15 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
             className="space-y-4 mt-4">
             <FormField
               control={form.control}
-              name="description"
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <Input
+                      type="number"
+                      step={0.01}
                       disabled={isSubmitting}
-                      placeholder=" eg: 'It teaches you to master the web development'"
+                      placeholder="Set the price for your course"
                       {...field}
                     />
                   </FormControl>
@@ -127,4 +129,4 @@ const DescriptionForm = ({ initialData, courseId }: Props) => {
   );
 };
 
-export default DescriptionForm;
+export default PriceForm;
