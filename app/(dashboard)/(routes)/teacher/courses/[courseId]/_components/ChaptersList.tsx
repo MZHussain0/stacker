@@ -73,7 +73,7 @@ const ChaptersList = ({ items, onEdit, onReorder }: Props) => {
                     className={cn(
                       "flex items-center gap-x-2 bg-primary-foreground border-muted-foreground border text-primary rounded-md mb-4 text-sm",
                       chapter.isPublished &&
-                        "bg-brand border-brand-accent text-secondary"
+                        "bg-black border-brand-accent text-primary"
                     )}
                     {...provided.draggableProps}
                     ref={provided.innerRef}>
@@ -87,12 +87,14 @@ const ChaptersList = ({ items, onEdit, onReorder }: Props) => {
                       <Grip className="h-5 w-5" />
                     </div>
                     {chapter.title}
-                    <div className="ml-auto pr-2 flex items-center gap-x-2">
-                      {chapter.isFree && <Badge>Free</Badge>}
+                    <div className="ml-auto pr-2 text-brand flex items-center gap-x-2">
+                      {chapter.isFree && (
+                        <Badge className="bg-muted">Free</Badge>
+                      )}
                       <Badge
                         className={cn(
-                          "bg-muted-foreground ",
-                          !chapter.isPublished && "text-muted"
+                          "bg-muted text-brand",
+                          !chapter.isPublished && "text-primary"
                         )}>
                         {chapter.isPublished ? "Published" : "Draft"}
                       </Badge>
