@@ -5,6 +5,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
+import SearchInput from "./SearchInput";
 
 type Props = {};
 
@@ -13,29 +14,37 @@ const NavbarRoutes = (props: Props) => {
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isPlayerPage = pathname?.includes("/chapter");
+  const isSearchPage = pathname === "/search";
   return (
-    <div className="flex gap-x-4 ml-auto">
-      {isTeacherPage || isPlayerPage ? (
-        <Link href={"/"}>
-          <Button
-            size={"sm"}
-            variant={"ghost"}
-            className="bg-muted hover:bg-brand hover:text-secondary transition-all">
-            <LogOutIcon className="h-4 w-4 mr-2" /> Exit
-          </Button>
-        </Link>
-      ) : (
-        <Link href={"/teacher/courses"}>
-          <Button
-            className="bg-muted hover:bg-brand hover:text-secondary transition-all"
-            size={"sm"}
-            variant={"ghost"}>
-            Teacher Mode
-          </Button>
-        </Link>
+    <>
+      {isSearchPage && (
+        <div className="hidden md:block">
+          <SearchInput />
+        </div>
       )}
-      <UserButton afterSignOutUrl="/" />
-    </div>
+      <div className="flex gap-x-4 ml-auto">
+        {isTeacherPage || isPlayerPage ? (
+          <Link href={"/"}>
+            <Button
+              size={"sm"}
+              variant={"ghost"}
+              className="bg-muted hover:bg-brand hover:text-secondary transition-all">
+              <LogOutIcon className="h-4 w-4 mr-2" /> Exit
+            </Button>
+          </Link>
+        ) : (
+          <Link href={"/teacher/courses"}>
+            <Button
+              className="bg-muted hover:bg-brand hover:text-secondary transition-all"
+              size={"sm"}
+              variant={"ghost"}>
+              Teacher Mode
+            </Button>
+          </Link>
+        )}
+        <UserButton afterSignOutUrl="/" />
+      </div>
+    </>
   );
 };
 
