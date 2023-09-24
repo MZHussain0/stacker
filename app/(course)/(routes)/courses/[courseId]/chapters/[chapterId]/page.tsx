@@ -9,6 +9,7 @@ import { VideoPlayer } from "./_components/VideopPlayer";
 import { CourseEnrollButton } from "./_components/CourseEnrollButton";
 import { Separator } from "@/components/ui/separator";
 import Preview from "@/components/Preview";
+import { CourseProgressButton } from "./_components/CourseProgressButton";
 
 type Props = {
   params: {
@@ -72,14 +73,15 @@ const ChapterIdPage = async ({ params }: Props) => {
           <div className="p-4 flex flex-col md:flex-row items-center justify-between">
             <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
             {purchase ? (
-              <div className=""></div>
+              <div className="">
+                <CourseProgressButton
+                  chapterId={params.chapterId}
+                  courseId={params.courseId}
+                  nextChapterId={nextChapter?.id}
+                  isCompleted={!!userProgress?.isCompleted}
+                />
+              </div>
             ) : (
-              // <CourseProgressButton
-              //   chapterId={params.chapterId}
-              //   courseId={params.courseId}
-              //   nextChapterId={nextChapter?.id}
-              //   isCompleted={!!userProgress?.isCompleted}
-              // />
               <CourseEnrollButton
                 courseId={params.courseId}
                 price={course.price!}
